@@ -4,12 +4,19 @@ class MoviesController < ApplicationController
   # GET /movies or /movies.json
   def index
     @movies = Movie.all
+    @all_ratings = Movie.all_ratings
+    @ratings_to_show = params[:ratings] ? params[:ratings].keys : @all_ratings
+    @sort_by = params[:sort_by] || "title"
+    @movies = Movie.with_ratings(@ratings_to_show).order(@sort_by => :asc)
   end
 
   # GET /movies/1 or /movies/1.json
   def show
   end
-
+  # app/models/movie.rb
+  def self.all_ratings
+    %w[G PG PG-13 R]        
+  end
   # GET /movies/new
   def new
     @movie = Movie.new
